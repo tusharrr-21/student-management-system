@@ -1,0 +1,57 @@
+# =============================================================================
+# Deployment — runs the Student Management System frontend containers.
+# A Deployment keeps your app running: it creates ReplicaSets and restarts
+# failed Pods. Use with: kubectl apply -f k8s/
+# =============================================================================
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  # Human-readable name of this Deployment (used in kubectl get deployment).
+  name: sms-frontend
+  labels:
+    # Labels on the Deployment object (optional metadata for filtering).
+    app: sms-frontend
+    component: web
+spec:
+  # How many identical Pods to run (scale out for availability / demos).
+  replicas: 2
+
+  # Which Pods this Deployment manages (must match template.metadata.labels).
+  selector:
+    matchLabels:
+      app: sms-frontend
+
+  template:
+    # Pod template — every replica is created from this spec.
+    metadata:
+      labels:
+        # Must match spec.selector.matchLabels above.
+        app: sms-frontend
+        component: web
+    spec:
+      # Deployments only support Always — Kubernetes restarts crashed containers.
+      restartPolicy: Always
+
+      containers:
+        # Single container per Pod: the existing Docker image (frontend / port 3000).
+        - name: frontend
+          # Build locally from the project Dockerfile (see README), then load into Minikube if needed.
+          image: sms-frontend:latest
+          # Use the image from the node (Minikube / Docker Desktop) instead of pulling from a registry.
+          imagePullPolicy: IfNotPresent
+          ports:
+            # Port the Express server listens on inside the container (see frontend/server.js).
+            - name: http
+              containerPort: 3000
+
+          # Probes: TCP on 3000 checks the server is listening (simple and avoids HTTP redirect quirks).
+          readinessProbe:
+            tcpSocket:
+              port: http
+            initialDelaySeconds: 5
+            periodSeconds: 10
+          livenessProbe:
+            tcpSocket:
+              port: http
+            initialDelaySeconds: 15
+            periodSeconds: 20

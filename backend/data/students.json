@@ -1,0 +1,62 @@
+[
+  {
+    "id": "STU001",
+    "name": "Aarav Sharma",
+    "usn": "1MS21CS001",
+    "department": "Computer Science",
+    "semester": "5",
+    "email": "aarav.sharma@college.edu",
+    "password": "aarav123",
+    "attendance": 85,
+    "marks": { "mathematics": 88, "physics": 76, "chemistry": 82, "programming": 95, "english": 79 },
+    "createdAt": "2024-01-10T10:00:00.000Z"
+  },
+  {
+    "id": "STU002",
+    "name": "Priya Patel",
+    "usn": "1MS21CS002",
+    "department": "Computer Science",
+    "semester": "5",
+    "email": "priya.patel@college.edu",
+    "password": "priya123",
+    "attendance": 92,
+    "marks": { "mathematics": 91, "physics": 85, "chemistry": 88, "programming": 97, "english": 84 },
+    "createdAt": "2024-01-11T10:00:00.000Z"
+  },
+  {
+    "id": "STU003",
+    "name": "Rahul Verma",
+    "usn": "1MS21EC001",
+    "department": "Electronics",
+    "semester": "3",
+    "email": "rahul.verma@college.edu",
+    "password": "rahul123",
+    "attendance": 67,
+    "marks": { "mathematics": 72, "physics": 68, "chemistry": 74, "programming": 65, "english": 70 },
+    "createdAt": "2024-01-12T10:00:00.000Z"
+  },
+  {
+    "id": "STU004",
+    "name": "Sneha Reddy",
+    "usn": "1MS21ME001",
+    "department": "Mechanical",
+    "semester": "7",
+    "email": "sneha.reddy@college.edu",
+    "password": "sneha123",
+    "attendance": 78,
+    "marks": { "mathematics": 80, "physics": 77, "chemistry": 83, "programming": 70, "english": 75 },
+    "createdAt": "2024-01-13T10:00:00.000Z"
+  },
+  {
+    "id": "STU005",
+    "name": "Kiran Kumar",
+    "usn": "1MS21CV001",
+    "department": "Civil",
+    "semester": "1",
+    "email": "kiran.kumar@college.edu",
+    "password": "kiran123",
+    "attendance": 55,
+    "marks": { "mathematics": 60, "physics": 58, "chemistry": 62, "programming": 55, "english": 65 },
+    "createdAt": "2024-01-14T10:00:00.000Z"
+  }
+]

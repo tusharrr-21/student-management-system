@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/><meta name="viewport" content="width=device-width,initial-scale=1"/>
+  <title>Student Form | EduManage</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet"/>
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" rel="stylesheet"/>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet"/>
+  <link href="../css/style.css" rel="stylesheet"/>
+</head>
+<body>
+<div class="app-wrapper">
+  <nav id="sidebar" class="sidebar">
+    <div class="sidebar-header"><div class="sidebar-logo"><i class="fas fa-graduation-cap"></i><span class="logo-text">EduManage</span></div></div>
+    <div class="sidebar-user"><div class="user-avatar"><i class="fas fa-user-shield"></i></div><div class="user-info"><span class="user-name" id="adminName">Admin</span><span class="user-role">Administrator</span></div></div>
+    <ul class="sidebar-nav">
+      <li class="nav-label">Main Menu</li>
+      <li class="nav-item"><a href="dashboard.html" class="nav-link"><i class="fas fa-tachometer-alt"></i><span>Dashboard</span></a></li>
+      <li class="nav-item"><a href="students.html" class="nav-link"><i class="fas fa-user-graduate"></i><span>Students</span></a></li>
+      <li class="nav-item"><a href="student-form.html" class="nav-link active"><i class="fas fa-user-plus"></i><span>Add Student</span></a></li>
+      <li class="nav-label">Reports</li>
+      <li class="nav-item"><a href="reports.html?type=attendance" class="nav-link"><i class="fas fa-calendar-check"></i><span>Attendance</span></a></li>
+      <li class="nav-item"><a href="reports.html?type=marks" class="nav-link"><i class="fas fa-chart-bar"></i><span>Marks</span></a></li>
+      <li class="nav-label">Account</li>
+      <li class="nav-item"><a href="#" class="nav-link text-danger-nav" id="logoutBtn"><i class="fas fa-sign-out-alt"></i><span>Logout</span></a></li>
+    </ul>
+  </nav>
+  <div class="main-content">
+    <header class="topbar">
+      <div class="topbar-left"><h5 class="page-title mb-0" id="pageTitle">Add Student</h5></div>
+    </header>
+    <div class="content-area">
+      <nav aria-label="breadcrumb" class="mb-3">
+        <ol class="breadcrumb">
+          <li class="breadcrumb-item"><a href="dashboard.html">Dashboard</a></li>
+          <li class="breadcrumb-item"><a href="students.html">Students</a></li>
+          <li class="breadcrumb-item active" id="breadcrumbTitle">Add Student</li>
+        </ol>
+      </nav>
+      <div class="row justify-content-center"><div class="col-12 col-xl-10">
+        <div class="card">
+          <div class="card-header"><h5 class="card-title mb-0" id="formTitle"><i class="fas fa-user-plus me-2"></i>Add New Student</h5></div>
+          <div class="card-body">
+            <div id="alertBox"></div>
+            <form id="studentForm" novalidate>
+              <div class="form-section">
+                <h6 class="form-section-title"><i class="fas fa-user me-2"></i>Personal Information</h6>
+                <div class="row g-3">
+                  <div class="col-12 col-md-6"><label class="form-label required">Full Name</label><input type="text" class="form-control" id="name" placeholder="e.g. Aarav Sharma" required/></div>
+                  <div class="col-12 col-md-6"><label class="form-label required">Email Address</label><input type="email" class="form-control" id="email" placeholder="student@college.edu" required/></div>
+                  <div class="col-12 col-md-6"><label class="form-label required">USN</label><input type="text" class="form-control text-uppercase" id="usn" placeholder="e.g. 1MS21CS001" required/></div>
+                  <div class="col-12 col-md-3"><label class="form-label required">Department</label>
+                    <select class="form-select" id="department" required>
+                      <option value="">Select</option>
+                      <option>Computer Science</option><option>Electronics</option><option>Mechanical</option>
+                      <option>Civil</option><option>Electrical</option><option>Information Science</option>
+                      <option>Chemical</option><option>Biotechnology</option>
+                    </select>
+                  </div>
+                  <div class="col-12 col-md-3"><label class="form-label required">Semester</label>
+                    <select class="form-select" id="semester" required>
+                      <option value="">Select</option>
+                      <option>1</option><option>2</option><option>3</option><option>4</option>
+                      <option>5</option><option>6</option><option>7</option><option>8</option>
+                    </select>
+                  </div>
+                </div>
+              </div>
+              <div class="form-section">
+                <h6 class="form-section-title"><i class="fas fa-calendar-check me-2"></i>Attendance</h6>
+                <div class="row g-3">
+                  <div class="col-12 col-md-4">
+                    <label class="form-label required">Attendance %</label>
+                    <div class="input-group"><input type="number" class="form-control" id="attendance" min="0" max="100" placeholder="0-100" required oninput="updateAttBar(this.value)"/><span class="input-group-text">%</span></div>
+                    <div class="mt-2"><div class="progress" style="height:8px"><div class="progress-bar" id="attBar" style="width:0%;background:#ef4444"></div></div>
+                    <small id="attLabel" class="text-muted">Enter attendance</small></div>
+                  </div>
+                </div>
+              </div>
+              <div class="form-section">
+                <h6 class="form-section-title"><i class="fas fa-chart-bar me-2"></i>Subject Marks (out of 100)</h6>
+                <div class="row g-3">
+                  <div class="col-6 col-md-4 col-lg-2-4"><label class="form-label">Mathematics</label><div class="marks-input-wrapper"><input type="number" class="form-control marks-input" id="mathematics" min="0" max="100" placeholder="0-100" oninput="updateGrade(this,'gMath')"/><span class="marks-grade" id="gMath">-</span></div></div>
+                  <div class="col-6 col-md-4 col-lg-2-4"><label class="form-label">Physics</label><div class="marks-input-wrapper"><input type="number" class="form-control marks-input" id="physics" min="0" max="100" placeholder="0-100" oninput="updateGrade(this,'gPhys')"/><span class="marks-grade" id="gPhys">-</span></div></div>
+                  <div class="col-6 col-md-4 col-lg-2-4"><label class="form-label">Chemistry</label><div class="marks-input-wrapper"><input type="number" class="form-control marks-input" id="chemistry" min="0" max="100" placeholder="0-100" oninput="updateGrade(this,'gChem')"/><span class="marks-grade" id="gChem">-</span></div></div>
+                  <div class="col-6 col-md-4 col-lg-2-4"><label class="form-label">Programming</label><div class="marks-input-wrapper"><input type="number" class="form-control marks-input" id="programming" min="0" max="100" placeholder="0-100" oninput="updateGrade(this,'gProg')"/><span class="marks-grade" id="gProg">-</span></div></div>
+                  <div class="col-6 col-md-4 col-lg-2-4"><label class="form-label">English</label><div class="marks-input-wrapper"><input type="number" class="form-control marks-input" id="english" min="0" max="100" placeholder="0-100" oninput="updateGrade(this,'gEng')"/><span class="marks-grade" id="gEng">-</span></div></div>
+                </div>
+              </div>
+              <div class="d-flex gap-3 justify-content-end mt-4">
+                <a href="students.html" class="btn btn-outline-secondary"><i class="fas fa-times me-1"></i>Cancel</a>
+                <button type="submit" class="btn btn-primary" id="submitBtn"><i class="fas fa-save me-1"></i>Save Student</button>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div></div>
+    </div>
+  </div>
+</div>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+<script src="../js/api.js"></script>
+<script>
+const editId = new URLSearchParams(location.search).get('id');
+
+function showAlert(msg, type='danger') {
+  document.getElementById('alertBox').innerHTML =
+    `<div class="alert alert-${type} alert-dismissible fade show"><i class="fas fa-${type==='danger'?'exclamation-circle':'check-circle'} me-2"></i>${msg}<button type="button" class="btn-close" data-bs-dismiss="alert"></button></div>`;
+}
+
+function updateAttBar(v) {
+  const val = Math.min(100, Math.max(0, parseInt(v)||0));
+  const bar = document.getElementById('attBar');
+  const lbl = document.getElementById('attLabel');
+  bar.style.width = val + '%';
+  if (val>=85){bar.style.background='#10b981';lbl.textContent='Excellent';lbl.className='text-success small';}
+  else if(val>=75){bar.style.background='#4f46e5';lbl.textContent='Good';lbl.className='text-primary small';}
+  else if(val>=65){bar.style.background='#f59e0b';lbl.textContent='Average';lbl.className='text-warning small';}
+  else{bar.style.background='#ef4444';lbl.textContent='Low — below 75%';lbl.className='text-danger small';}
+}
+
+function grade(m){if(m>=90)return'A+';if(m>=80)return'A';if(m>=70)return'B';if(m>=60)return'C';if(m>=50)return'D';return'F';}
+function updateGrade(inp, gId) {
+  const v = parseInt(inp.value)||0;
+  const el = document.getElementById(gId);
+  el.textContent = grade(v);
+  el.className = 'marks-grade ' + (v>=80?'text-success':v>=60?'text-warning':'text-danger');
+}
+
+async function init() {
+  try { const me = await api.adminMe(); document.getElementById('adminName').textContent = me.data.name; }
+  catch { location.href = 'login.html'; return; }
+
+  if (editId) {
+    document.getElementById('pageTitle').textContent = 'Edit Student';
+    document.getElementById('breadcrumbTitle').textContent = 'Edit Student';
+    document.getElementById('formTitle').innerHTML = '<i class="fas fa-edit me-2"></i>Edit Student';
+    document.getElementById('submitBtn').innerHTML = '<i class="fas fa-save me-1"></i>Update Student';
+    try {
+      const { data: s } = await api.getStudent(editId);
+      document.getElementById('name').value        = s.name;
+      document.getElementById('email').value       = s.email;
+      document.getElementById('usn').value         = s.usn;
+      document.getElementById('department').value  = s.department;
+      document.getElementById('semester').value    = s.semester;
+      document.getElementById('attendance').value  = s.attendance;
+      document.getElementById('mathematics').value = s.marks.mathematics;
+      document.getElementById('physics').value     = s.marks.physics;
+      document.getElementById('chemistry').value   = s.marks.chemistry;
+      document.getElementById('programming').value = s.marks.programming;
+      document.getElementById('english').value     = s.marks.english;
+      updateAttBar(s.attendance);
+      ['mathematics','physics','chemistry','programming','english'].forEach((sub,i) => {
+        const ids = ['gMath','gPhys','gChem','gProg','gEng'];
+        updateGrade(document.getElementById(sub), ids[i]);
+      });
+    } catch { showAlert('Failed to load student data.'); }
+  }
+}
+
+document.getElementById('usn').addEventListener('input', function(){
+  const p=this.selectionStart; this.value=this.value.toUpperCase(); this.setSelectionRange(p,p);
+});
+
+document.getElementById('studentForm').addEventListener('submit', async (e) => {
+  e.preventDefault();
+  const body = {
+    name: document.getElementById('name').value.trim(),
+    email: document.getElementById('email').value.trim(),
+    usn: document.getElementById('usn').value.trim(),
+    department: document.getElementById('department').value,
+    semester: document.getElementById('semester').value,
+    attendance: document.getElementById('attendance').value,
+    mathematics: document.getElementById('mathematics').value,
+    physics: document.getElementById('physics').value,
+    chemistry: document.getElementById('chemistry').value,
+    programming: document.getElementById('programming').value,
+    english: document.getElementById('english').value
+  };
+  const btn = document.getElementById('submitBtn');
+  btn.disabled = true; btn.innerHTML = '<i class="fas fa-spinner fa-spin me-1"></i>Saving...';
+  try {
+    if (editId) { await api.updateStudent(editId, body); }
+    else        { await api.createStudent(body); }
+    location.href = 'students.html?success=' + (editId ? 'updated' : 'added');
+  } catch(err) {
+    showAlert(err.message || 'Failed to save student.');
+    btn.disabled = false; btn.innerHTML = '<i class="fas fa-save me-1"></i>' + (editId?'Update':'Save') + ' Student';
+  }
+});
+
+document.getElementById('logoutBtn').addEventListener('click', async (e) => {
+  e.preventDefault(); await api.adminLogout(); location.href = 'login.html';
+});
+
+init();
+</script>
+</body>
+</html>

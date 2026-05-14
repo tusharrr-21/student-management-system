@@ -1,0 +1,11 @@
+{
+  "name": "sms-frontend",
+  "version": "1.0.0",
+  "description": "Smart Student Management System - Frontend",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "dependencies": {
+    "express": "^4.18.2"
+  }
+}

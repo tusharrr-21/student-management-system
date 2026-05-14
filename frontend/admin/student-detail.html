@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/><meta name="viewport" content="width=device-width,initial-scale=1"/>
+  <title>Student Detail | EduManage</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet"/>
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" rel="stylesheet"/>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet"/>
+  <link href="../css/style.css" rel="stylesheet"/>
+</head>
+<body>
+<div class="app-wrapper">
+  <nav id="sidebar" class="sidebar">
+    <div class="sidebar-header"><div class="sidebar-logo"><i class="fas fa-graduation-cap"></i><span class="logo-text">EduManage</span></div></div>
+    <div class="sidebar-user"><div class="user-avatar"><i class="fas fa-user-shield"></i></div><div class="user-info"><span class="user-name" id="adminName">Admin</span><span class="user-role">Administrator</span></div></div>
+    <ul class="sidebar-nav">
+      <li class="nav-label">Main Menu</li>
+      <li class="nav-item"><a href="dashboard.html" class="nav-link"><i class="fas fa-tachometer-alt"></i><span>Dashboard</span></a></li>
+      <li class="nav-item"><a href="students.html" class="nav-link active"><i class="fas fa-user-graduate"></i><span>Students</span></a></li>
+      <li class="nav-item"><a href="student-form.html" class="nav-link"><i class="fas fa-user-plus"></i><span>Add Student</span></a></li>
+      <li class="nav-label">Reports</li>
+      <li class="nav-item"><a href="reports.html?type=attendance" class="nav-link"><i class="fas fa-calendar-check"></i><span>Attendance</span></a></li>
+      <li class="nav-item"><a href="reports.html?type=marks" class="nav-link"><i class="fas fa-chart-bar"></i><span>Marks</span></a></li>
+      <li class="nav-label">Account</li>
+      <li class="nav-item"><a href="#" class="nav-link text-danger-nav" id="logoutBtn"><i class="fas fa-sign-out-alt"></i><span>Logout</span></a></li>
+    </ul>
+  </nav>
+  <div class="main-content">
+    <header class="topbar">
+      <div class="topbar-left"><h5 class="page-title mb-0" id="pageTitle">Student Detail</h5></div>
+    </header>
+    <div class="content-area" id="mainContent">
+      <div class="text-center py-5 text-muted"><i class="fas fa-spinner fa-spin fa-2x"></i><p class="mt-2">Loading...</p></div>
+    </div>
+  </div>
+</div>
+<div class="modal fade" id="deleteModal" tabindex="-1">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header border-0"><h5 class="modal-title text-danger"><i class="fas fa-exclamation-triangle me-2"></i>Confirm Delete</h5><button type="button" class="btn-close" data-bs-dismiss="modal"></button></div>
+      <div class="modal-body"><p>Delete <strong id="delName"></strong>? This cannot be undone.</p></div>
+      <div class="modal-footer border-0"><button class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button><button class="btn btn-danger" id="confirmDelBtn"><i class="fas fa-trash me-1"></i>Delete</button></div>
+    </div>
+  </div>
+</div>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+<script src="../js/api.js"></script>
+<script>
+const id = new URLSearchParams(location.search).get('id');
+if (!id) location.href = 'students.html';
+
+function grade(m){
+  if(m>=90)return{l:'A+',c:'success'};if(m>=80)return{l:'A',c:'success'};
+  if(m>=70)return{l:'B',c:'primary'};if(m>=60)return{l:'C',c:'warning'};
+  if(m>=50)return{l:'D',c:'warning'};return{l:'F',c:'danger'};
+}
+function attStatus(a){
+  if(a>=85)return{l:'Excellent',c:'success'};if(a>=75)return{l:'Good',c:'primary'};
+  if(a>=65)return{l:'Average',c:'warning'};return{l:'Low',c:'danger'};
+}
+
+async function init() {
+  try { const me = await api.adminMe(); document.getElementById('adminName').textContent = me.data.name; }
+  catch { location.href = 'login.html'; return; }
+  try {
+    const { data: s } = await api.getStudent(id);
+    document.getElementById('pageTitle').textContent = s.name;
+    const marks = Object.entries(s.marks);
+    const avg   = Math.round(marks.reduce((a,[,v])=>a+v,0)/marks.length);
+    const og    = grade(avg);
+    const as_   = attStatus(s.attendance);
+
+    document.getElementById('mainContent').innerHTML = `
+      <nav aria-label="breadcrumb" class="mb-3">
+        <ol class="breadcrumb">
+          <li class="breadcrumb-item"><a href="dashboard.html">Dashboard</a></li>
+          <li class="breadcrumb-item"><a href="students.html">Students</a></li>
+          <li class="breadcrumb-item active">${s.name}</li>
+        </ol>
+      </nav>
+      <div class="row g-4">
+        <div class="col-12 col-lg-4">
+          <div class="card student-profile-card">
+            <div class="profile-header">
+              <div class="profile-avatar">${s.name.charAt(0)}</div>
+              <h4 class="profile-name">${s.name}</h4>
+              <p class="profile-usn"><code>${s.usn}</code></p>
+              <span class="badge bg-${as_.c}-soft text-${as_.c} fs-6">${as_.l} Attendance</span>
+            </div>
+            <div class="profile-details">
+              <div class="detail-row"><span class="detail-label"><i class="fas fa-id-badge me-2"></i>Student ID</span><span class="detail-value">${s.id}</span></div>
+              <div class="detail-row"><span class="detail-label"><i class="fas fa-envelope me-2"></i>Email</span><span class="detail-value">${s.email}</span></div>
+              <div class="detail-row"><span class="detail-label"><i class="fas fa-building me-2"></i>Department</span><span class="detail-value">${s.department}</span></div>
+              <div class="detail-row"><span class="detail-label"><i class="fas fa-book me-2"></i>Semester</span><span class="detail-value">Semester ${s.semester}</span></div>
+              <div class="detail-row"><span class="detail-label"><i class="fas fa-calendar me-2"></i>Added On</span><span class="detail-value">${new Date(s.createdAt).toLocaleDateString('en-IN',{day:'2-digit',month:'short',year:'numeric'})}</span></div>
+            </div>
+            <div class="profile-actions">
+              <a href="student-form.html?id=${s.id}" class="btn btn-warning w-100 mb-2"><i class="fas fa-edit me-2"></i>Edit Student</a>
+              <button class="btn btn-outline-danger w-100" onclick="openDelete('${s.id}','${s.name}')"><i class="fas fa-trash me-2"></i>Delete Student</button>
+            </div>
+          </div>
+        </div>
+        <div class="col-12 col-lg-8">
+          <div class="card mb-4">
+            <div class="card-header"><h6 class="card-title mb-0"><i class="fas fa-calendar-check me-2"></i>Attendance</h6></div>
+            <div class="card-body">
+              <div class="row align-items-center">
+                <div class="col-auto">
+                  <div class="attendance-circle">
+                    <svg viewBox="0 0 120 120" class="attendance-svg">
+                      <circle cx="60" cy="60" r="50" fill="none" stroke="#f1f5f9" stroke-width="12"/>
+                      <circle cx="60" cy="60" r="50" fill="none" stroke="${s.attendance>=75?'#10b981':'#ef4444'}" stroke-width="12"
+                        stroke-dasharray="${Math.round(s.attendance*3.14)} 314" stroke-linecap="round" transform="rotate(-90 60 60)"/>
+                    </svg>
+                    <div class="attendance-text"><span class="att-percent">${s.attendance}%</span></div>
+                  </div>
+                </div>
+                <div class="col">
+                  <h5 class="mb-1">Attendance: <span class="text-${as_.c}">${as_.l}</span></h5>
+                  <p class="text-muted mb-2">${s.attendance>=75?'Student meets the minimum 75% requirement.':'Student is below the minimum 75% requirement.'}</p>
+                  <div class="progress" style="height:10px"><div class="progress-bar bg-${as_.c}" style="width:${s.attendance}%"></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="card mb-4">
+            <div class="card-header d-flex justify-content-between align-items-center">
+              <h6 class="card-title mb-0"><i class="fas fa-chart-bar me-2"></i>Subject Marks</h6>
+              <span class="badge bg-primary">Avg: ${avg}/100</span>
+            </div>
+            <div class="card-body">
+              ${marks.map(([sub,mark])=>{const g=grade(mark);return`
+                <div class="marks-row mb-3">
+                  <div class="d-flex justify-content-between mb-1">
+                    <span class="fw-semibold">${sub.charAt(0).toUpperCase()+sub.slice(1)}</span>
+                    <div class="d-flex align-items-center gap-2"><span class="fw-bold">${mark}/100</span><span class="badge bg-${g.c}">${g.l}</span></div>
+                  </div>
+                  <div class="progress" style="height:10px"><div class="progress-bar bg-${g.c}" style="width:${mark}%"></div></div>
+                </div>`;}).join('')}
+            </div>
+          </div>
+          <div class="card">
+            <div class="card-header"><h6 class="card-title mb-0"><i class="fas fa-spider me-2"></i>Performance Radar</h6></div>
+            <div class="card-body"><canvas id="radarChart" height="200"></canvas></div>
+          </div>
+        </div>
+      </div>`;
+
+    new Chart(document.getElementById('radarChart'), {
+      type: 'radar',
+      data: {
+        labels: marks.map(([k])=>k.charAt(0).toUpperCase()+k.slice(1)),
+        datasets: [{ label:'Marks', data: marks.map(([,v])=>v),
+          backgroundColor:'rgba(79,70,229,0.15)', borderColor:'#4f46e5',
+          pointBackgroundColor:'#4f46e5', pointRadius:5, borderWidth:2 }]
+      },
+      options: { responsive:true, scales:{ r:{ beginAtZero:true, max:100, ticks:{stepSize:20}, grid:{color:'#e2e8f0'} } }, plugins:{legend:{display:false}} }
+    });
+  } catch(e) { document.getElementById('mainContent').innerHTML = `<div class="alert alert-danger">Failed to load student. <a href="students.html">Go back</a></div>`; }
+}
+
+function openDelete(id, name) {
+  document.getElementById('delName').textContent = name;
+  document.getElementById('confirmDelBtn').dataset.id = id;
+  new bootstrap.Modal(document.getElementById('deleteModal')).show();
+}
+document.getElementById('confirmDelBtn').addEventListener('click', async function() {
+  await api.deleteStudent(this.dataset.id);
+  location.href = 'students.html?success=deleted';
+});
+document.getElementById('logoutBtn').addEventListener('click', async (e) => {
+  e.preventDefault(); await api.adminLogout(); location.href = 'login.html';
+});
+init();
+</script>
+</body>
+</html>

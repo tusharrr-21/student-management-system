@@ -1,0 +1,29 @@
+# =============================================================================
+# Service — stable network endpoint for the frontend Pods.
+# NodePort exposes the app on each cluster node’s IP at a high port (30000–32767)
+# so you can open it from your browser (Minikube / cloud / lab VM).
+# =============================================================================
+apiVersion: v1
+kind: Service
+metadata:
+  name: sms-frontend-service
+  labels:
+    app: sms-frontend
+    component: web
+spec:
+  # NodePort = ClusterIP + a port on every node (good for learning / demos).
+  type: NodePort
+
+  # Send traffic only to Pods whose labels match these selectors.
+  selector:
+    app: sms-frontend
+    component: web
+
+  ports:
+    - name: http
+      # Port clients use when talking to this Service inside the cluster.
+      port: 3000
+      # Port on the Pod container to forward traffic to (Express on 3000).
+      targetPort: 3000
+      # Fixed high port on the node for predictable URLs in labs (must be 30000–32767).
+      nodePort: 30080

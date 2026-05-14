@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" /><meta name="viewport" content="width=device-width,initial-scale=1"/>
+  <title>Admin Login | EduManage</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet"/>
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" rel="stylesheet"/>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet"/>
+  <link href="../css/style.css" rel="stylesheet"/>
+</head>
+<body class="login-body">
+<div class="login-wrapper">
+  <div class="login-left d-none d-lg-flex">
+    <div class="login-left-content">
+      <div class="login-brand"><i class="fas fa-graduation-cap"></i><h1>EduManage</h1></div>
+      <h2>Smart Student Management System</h2>
+      <p>Manage students, track attendance, monitor academic performance — all in one place.</p>
+      <div class="login-features">
+        <div class="feature-item"><i class="fas fa-users"></i><span>Student Records</span></div>
+        <div class="feature-item"><i class="fas fa-calendar-check"></i><span>Attendance Tracking</span></div>
+        <div class="feature-item"><i class="fas fa-chart-line"></i><span>Marks & Analytics</span></div>
+        <div class="feature-item"><i class="fas fa-shield-alt"></i><span>Secure Admin Panel</span></div>
+      </div>
+    </div>
+    <div class="login-left-bg"></div>
+  </div>
+  <div class="login-right">
+    <div class="login-form-container">
+      <div class="login-header"><h3>Welcome Back</h3><p>Sign in to your admin account</p></div>
+      <div id="alertBox"></div>
+      <form id="loginForm">
+        <div class="form-floating mb-3">
+          <input type="text" class="form-control" id="username" placeholder="Username" required/>
+          <label for="username"><i class="fas fa-user me-2"></i>Username</label>
+        </div>
+        <div class="form-floating mb-4 position-relative">
+          <input type="password" class="form-control" id="password" placeholder="Password" required/>
+          <label for="password"><i class="fas fa-lock me-2"></i>Password</label>
+          <button type="button" class="password-toggle" onclick="togglePwd('password','eye1')">
+            <i class="fas fa-eye" id="eye1"></i>
+          </button>
+        </div>
+        <button type="submit" class="btn btn-login w-100" id="submitBtn">
+          <i class="fas fa-sign-in-alt me-2"></i>Sign In
+        </button>
+      </form>
+      <div class="login-hint mt-3"><i class="fas fa-info-circle me-1"></i>Credentials: <strong>admin</strong> / <strong>admin123</strong></div>
+      <div class="text-center mt-3"><a href="../student/login.html" class="text-muted small"><i class="fas fa-user-graduate me-1"></i>Student Login →</a></div>
+    </div>
+  </div>
+</div>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+<script src="../js/api.js"></script>
+<script>
+  // Redirect if already logged in
+  api.adminMe().then(() => location.href = 'dashboard.html').catch(() => {});
+
+  function togglePwd(id, iconId) {
+    const el = document.getElementById(id);
+    const ic = document.getElementById(iconId);
+    el.type = el.type === 'password' ? 'text' : 'password';
+    ic.classList.toggle('fa-eye'); ic.classList.toggle('fa-eye-slash');
+  }
+
+  function showAlert(msg, type = 'danger') {
+    document.getElementById('alertBox').innerHTML =
+      `<div class="alert alert-${type} alert-dismissible fade show">
+        <i class="fas fa-exclamation-circle me-2"></i>${msg}
+        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+      </div>`;
+  }
+
+  document.getElementById('loginForm').addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const btn = document.getElementById('submitBtn');
+    btn.disabled = true; btn.innerHTML = '<i class="fas fa-spinner fa-spin me-2"></i>Signing in...';
+    try {
+      await api.adminLogin({
+        username: document.getElementById('username').value.trim(),
+        password: document.getElementById('password').value
+      });
+      location.href = 'dashboard.html';
+    } catch (err) {
+      showAlert(err.message || 'Login failed.');
+      btn.disabled = false; btn.innerHTML = '<i class="fas fa-sign-in-alt me-2"></i>Sign In';
+    }
+  });
+</script>
+</body>
+</html>
