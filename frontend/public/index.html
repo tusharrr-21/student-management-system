@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Student Management System</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+    }
+    .card {
+      background: #fff;
+      border-radius: 16px;
+      box-shadow: 0 20px 60px rgba(0,0,0,0.2);
+      padding: 40px;
+      max-width: 700px;
+      width: 100%;
+    }
+    h1 { color: #333; margin-bottom: 8px; font-size: 1.8rem; }
+    p.sub { color: #666; margin-bottom: 24px; font-size: 0.95rem; }
+    button {
+      background: #667eea;
+      color: #fff;
+      border: none;
+      padding: 12px 28px;
+      border-radius: 8px;
+      font-size: 1rem;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+    button:hover { background: #5a6fd6; }
+    button:disabled { background: #aaa; cursor: not-allowed; }
+    #status { margin-top: 16px; color: #888; font-size: 0.9rem; }
+    #list { margin-top: 20px; }
+    .student {
+      background: #f8f9ff;
+      border-left: 4px solid #667eea;
+      padding: 14px 18px;
+      margin-bottom: 10px;
+      border-radius: 6px;
+    }
+    .student strong { color: #333; }
+    .student span { color: #666; font-size: 0.9rem; }
+    .error { color: #e53e3e; margin-top: 12px; }
+  </style>
+</head>
+<body>
+  <div class="card">
+    <h1>Student Management System</h1>
+    <p class="sub">DevOps Demo — Frontend → Backend (Kubernetes service DNS)</p>
+    <button id="loadBtn" onclick="loadStudents()">Load Students</button>
+    <p id="status"></p>
+    <div id="list"></div>
+  </div>
+
+  <script>
+    // Frontend server proxies to http://sms-backend-service:5000/students
+    async function loadStudents() {
+      const btn = document.getElementById('loadBtn');
+      const status = document.getElementById('status');
+      const list = document.getElementById('list');
+
+      btn.disabled = true;
+      status.textContent = 'Loading students from backend...';
+      list.innerHTML = '';
+
+      try {
+        const res = await fetch('/students');
+        if (!res.ok) throw new Error('HTTP ' + res.status);
+        const students = await res.json();
+
+        status.textContent = students.length + ' student(s) loaded.';
+        list.innerHTML = students.map(s => `
+          <div class="student">
+            <strong>${s.name}</strong><br>
+            <span>USN: ${s.usn} &nbsp;|&nbsp; Course: ${s.course}</span>
+          </div>
+        `).join('');
+      } catch (err) {
+        status.textContent = '';
+        list.innerHTML = '<p class="error">Failed to load students: ' + err.message + '</p>';
+      } finally {
+        btn.disabled = false;
+      }
+    }
+  </script>
+</body>
+</html>

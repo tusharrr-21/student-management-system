@@ -1,0 +1,32 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: sms-backend
+  namespace: sms
+  labels:
+    app: sms-backend
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: sms-backend
+  template:
+    metadata:
+      labels:
+        app: sms-backend
+    spec:
+      containers:
+        - name: sms-backend
+          image: YOUR_DOCKERHUB_USERNAME/sms-backend:latest
+          ports:
+            - containerPort: 5000
+          env:
+            - name: PORT
+              value: "5000"
+          resources:
+            requests:
+              memory: "64Mi"
+              cpu: "100m"
+            limits:
+              memory: "128Mi"
+              cpu: "250m"

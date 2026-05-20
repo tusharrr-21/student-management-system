@@ -1,188 +1,494 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8"/><meta name="viewport" content="width=device-width,initial-scale=1"/>
-  <title>My Dashboard | EduManage</title>
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet"/>
-  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" rel="stylesheet"/>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet"/>
-  <link href="../css/student-portal.css" rel="stylesheet"/>
-  <link href="../css/style.css" rel="stylesheet"/>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>My Dashboard | EduManage SMS</title>
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet"/>
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet"/>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Inter',sans-serif;background:#f0fdf4;min-height:100vh}
+
+/* NAVBAR */
+.sp-nav{position:fixed;top:0;left:0;right:0;height:64px;background:linear-gradient(135deg,#065f46,#059669);display:flex;align-items:center;justify-content:space-between;padding:0 24px;z-index:1100;box-shadow:0 2px 12px rgba(5,150,105,.3)}
+.sp-brand{display:flex;align-items:center;gap:10px;color:#fff;font-size:18px;font-weight:700}
+.sp-brand i{color:#6ee7b7;font-size:22px}
+.sp-badge{background:rgba(255,255,255,.2);color:#fff;font-size:11px;font-weight:600;padding:3px 10px;border-radius:20px}
+.sp-right{display:flex;align-items:center;gap:16px}
+.sp-avatar{width:38px;height:38px;border-radius:50%;background:rgba(255,255,255,.25);border:2px solid rgba(255,255,255,.4);color:#fff;font-weight:700;font-size:16px;display:flex;align-items:center;justify-content:center}
+.sp-uname{color:#fff;font-weight:600;font-size:13px;line-height:1.2}
+.sp-uusn{color:rgba(255,255,255,.7);font-size:11px}
+.sp-logout{background:rgba(255,255,255,.15);color:#fff;border:1px solid rgba(255,255,255,.3);padding:7px 14px;border-radius:8px;font-size:13px;font-weight:500;text-decoration:none;transition:all .2s}
+.sp-logout:hover{background:rgba(255,255,255,.3);color:#fff}
+
+/* LAYOUT */
+.sp-wrap{display:flex;min-height:100vh;padding-top:64px}
+
+/* SIDEBAR */
+.sp-side{width:220px;background:#fff;border-right:1px solid #d1fae5;padding:20px 12px;position:fixed;top:64px;left:0;height:calc(100vh - 64px);overflow-y:auto;z-index:100}
+.sp-menu{list-style:none;padding:0;margin:0}
+.sp-menu li{margin-bottom:4px}
+.sp-link{display:flex;align-items:center;gap:10px;padding:10px 14px;color:#374151;text-decoration:none;border-radius:10px;font-size:13.5px;font-weight:500;transition:all .2s;cursor:pointer;border:none;background:none;width:100%;text-align:left}
+.sp-link i{width:18px;text-align:center;color:#6b7280}
+.sp-link:hover{background:#f0fdf4;color:#059669}
+.sp-link:hover i{color:#059669}
+.sp-link.active{background:linear-gradient(135deg,#d1fae5,#a7f3d0);color:#065f46;font-weight:600}
+.sp-link.active i{color:#059669}
+
+/* MAIN */
+.sp-main{flex:1;margin-left:220px;padding:28px;min-height:calc(100vh - 64px)}
+
+/* SECTIONS */
+.sp-sec{display:none}
+.sp-sec.active{display:block}
+.sp-title{font-size:18px;font-weight:700;color:#1e293b;margin-bottom:20px;padding-bottom:10px;border-bottom:2px solid #d1fae5}
+
+/* WELCOME BANNER */
+.sp-banner{background:linear-gradient(135deg,#065f46,#059669);border-radius:16px;padding:28px 32px;color:#fff;display:flex;justify-content:space-between;align-items:center;margin-bottom:24px;box-shadow:0 8px 24px rgba(5,150,105,.25)}
+.sp-banner h2{font-size:22px;font-weight:700;margin-bottom:6px}
+.sp-banner p{opacity:.85;margin:0;font-size:14px}
+.sp-banner-icon{font-size:64px;opacity:.2}
+
+/* STAT CARDS */
+.sp-stat{border-radius:14px;padding:18px 16px;text-align:center;box-shadow:0 4px 12px rgba(0,0,0,.08);transition:transform .2s}
+.sp-stat:hover{transform:translateY(-3px)}
+.sp-stat-blue{background:linear-gradient(135deg,#eff6ff,#dbeafe);border:1px solid #bfdbfe}
+.sp-stat-green{background:linear-gradient(135deg,#f0fdf4,#dcfce7);border:1px solid #bbf7d0}
+.sp-stat-purple{background:linear-gradient(135deg,#faf5ff,#ede9fe);border:1px solid #ddd6fe}
+.sp-stat-orange{background:linear-gradient(135deg,#fff7ed,#ffedd5);border:1px solid #fed7aa}
+.sp-stat-icon{font-size:22px;margin-bottom:8px;color:#059669}
+.sp-stat-val{font-size:26px;font-weight:800;color:#1e293b;line-height:1}
+.sp-stat-lbl{font-size:12px;color:#64748b;margin:4px 0 2px}
+.sp-stat-sub{font-size:11px;font-weight:600}
+
+/* CARDS */
+.card{background:#fff;border:1px solid #e2e8f0;border-radius:12px;box-shadow:0 1px 3px rgba(0,0,0,.08)}
+.card-header{padding:14px 18px;border-bottom:1px solid #e2e8f0;background:transparent;border-radius:12px 12px 0 0}
+.card-title{font-size:14px;font-weight:600;color:#1e293b;margin:0}
+.card-body{padding:18px}
+
+/* PROGRESS */
+.progress{background:#f1f5f9;border-radius:99px;overflow:hidden}
+.progress-bar{border-radius:99px;transition:width .6s ease}
+
+/* ATTENDANCE CIRCLE */
+.att-circle{position:relative;width:160px;height:160px;margin:0 auto}
+.att-circle svg{width:160px;height:160px}
+.att-text{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);text-align:center}
+.att-pct{font-size:28px;font-weight:800;color:#1e293b}
+
+/* SUBJECT CARDS */
+.subj-card{background:#fff;border:2px solid #e2e8f0;border-radius:14px;padding:18px;transition:all .2s;box-shadow:0 1px 4px rgba(0,0,0,.06)}
+.subj-card:hover{box-shadow:0 6px 16px rgba(0,0,0,.1);transform:translateY(-2px)}
+.subj-card.bc-success{border-color:#10b981}
+.subj-card.bc-primary{border-color:#4f46e5}
+.subj-card.bc-warning{border-color:#f59e0b}
+.subj-card.bc-danger{border-color:#ef4444}
+.subj-score{font-size:40px;font-weight:800;line-height:1;margin:8px 0}
+.subj-total{font-size:16px;font-weight:400;color:#94a3b8}
+
+/* GRADE BADGE */
+.gbadge{color:#fff;padding:4px 10px;border-radius:20px;font-size:12px;font-weight:700}
+.gbadge.gs{background:#10b981}.gbadge.gp{background:#4f46e5}.gbadge.gw{background:#f59e0b}.gbadge.gd{background:#ef4444}
+
+/* PROFILE */
+.prof-avatar{width:90px;height:90px;border-radius:50%;background:linear-gradient(135deg,#059669,#10b981);color:#fff;font-size:36px;font-weight:700;display:flex;align-items:center;justify-content:center;margin:0 auto;box-shadow:0 8px 20px rgba(5,150,105,.3)}
+.det-row{display:flex;justify-content:space-between;align-items:center;padding:12px 0;border-bottom:1px solid #f1f5f9;font-size:13.5px}
+.det-row:last-child{border-bottom:none}
+.det-lbl{color:#64748b}
+.det-val{font-weight:600;color:#1e293b;text-align:right}
+
+/* ATT BANDS */
+.att-band{padding:14px 16px;border-radius:10px;border:2px solid transparent;background:#f8fafc;margin-bottom:10px}
+.att-band.active-b{background:#fff;box-shadow:0 2px 8px rgba(0,0,0,.08)}
+
+/* MARKS SUMMARY */
+.marks-sum{background:#fff;border:1px solid #e2e8f0;border-radius:12px;padding:20px;text-align:center;box-shadow:0 1px 4px rgba(0,0,0,.06)}
+.marks-big{font-size:36px;font-weight:800;line-height:1}
+.marks-sub{font-size:12px;color:#64748b;margin-top:6px}
+
+/* COLORS */
+.tc-success{color:#10b981!important}.tc-primary{color:#4f46e5!important}.tc-warning{color:#f59e0b!important}.tc-danger{color:#ef4444!important}.tc-info{color:#3b82f6!important}
+.bg-success-soft{background:#d1fae5!important}.bg-danger-soft{background:#fee2e2!important}
+.badge{display:inline-block;padding:4px 10px;border-radius:20px;font-size:12px;font-weight:600}
+.badge-success{background:#d1fae5;color:#065f46}.badge-primary{background:#e0e7ff;color:#3730a3}
+.badge-warning{background:#fef3c7;color:#92400e}.badge-danger{background:#fee2e2;color:#991b1b}
+.badge-info{background:#dbeafe;color:#1e40af}
+code{background:#eef2ff;color:#4f46e5;padding:2px 6px;border-radius:4px;font-size:12px}
+
+/* TABLE */
+.table{width:100%;font-size:13.5px;border-collapse:collapse}
+.table th{font-weight:600;font-size:12px;text-transform:uppercase;letter-spacing:.5px;color:#64748b;border-bottom:2px solid #e2e8f0;padding:12px 16px;white-space:nowrap}
+.table td{padding:12px 16px;vertical-align:middle;border-bottom:1px solid #e2e8f0}
+.table tr:last-child td{border-bottom:none}
+.table-light th{background:#f8fafc}
+
+/* RESPONSIVE */
+@media(max-width:767px){.sp-side{display:none}.sp-main{margin-left:0;padding:16px}.sp-banner{padding:20px}.sp-banner-icon{display:none}}
+</style>
 </head>
-<body class="sp-body">
-<nav class="sp-navbar">
-  <div class="sp-navbar-brand"><i class="fas fa-graduation-cap"></i><span>EduManage</span><span class="sp-portal-badge">Student Portal</span></div>
-  <div class="sp-navbar-right">
-    <div class="sp-user"><div class="sp-avatar" id="spAvatar">?</div><div class="sp-user-info d-none d-md-block"><span class="sp-user-name" id="spName">Loading...</span><span class="sp-user-usn" id="spUsn"></span></div></div>
-    <a href="#" class="sp-logout-btn" id="logoutBtn"><i class="fas fa-sign-out-alt me-1"></i><span class="d-none d-md-inline">Logout</span></a>
+<body>
+
+<!-- NAVBAR -->
+<nav class="sp-nav">
+  <div class="sp-brand">
+    <i class="fas fa-graduation-cap"></i>
+    <span>EduManage</span>
+    <span class="sp-badge">Student Portal</span>
+  </div>
+  <div class="sp-right">
+    <div class="sp-user">
+      <div class="sp-avatar" id="spAvatar">?</div>
+      <div class="d-none d-md-block">
+        <div class="sp-uname" id="spName">Loading...</div>
+        <div class="sp-uusn" id="spUsn"></div>
+      </div>
+    </div>
+    <a href="#" class="sp-logout" id="logoutBtn">
+      <i class="fas fa-sign-out-alt me-1"></i>Logout
+    </a>
   </div>
 </nav>
-<div class="sp-wrapper">
-  <aside class="sp-sidebar">
-    <ul class="sp-nav">
-      <li><a href="#" class="sp-nav-link active" onclick="show('overview',this)"><i class="fas fa-home"></i><span>Overview</span></a></li>
-      <li><a href="#" class="sp-nav-link" onclick="show('profile',this)"><i class="fas fa-user-circle"></i><span>My Profile</span></a></li>
-      <li><a href="#" class="sp-nav-link" onclick="show('attendance',this)"><i class="fas fa-calendar-check"></i><span>Attendance</span></a></li>
-      <li><a href="#" class="sp-nav-link" onclick="show('marks',this)"><i class="fas fa-chart-bar"></i><span>Marks</span></a></li>
-      <li><a href="#" class="sp-nav-link" onclick="show('performance',this)"><i class="fas fa-chart-line"></i><span>Performance</span></a></li>
+
+<!-- WRAPPER -->
+<div class="sp-wrap">
+
+  <!-- SIDEBAR -->
+  <aside class="sp-side">
+    <ul class="sp-menu">
+      <li><button class="sp-link active" onclick="show('overview',this)"><i class="fas fa-home"></i> Overview</button></li>
+      <li><button class="sp-link" onclick="show('profile',this)"><i class="fas fa-user-circle"></i> My Profile</button></li>
+      <li><button class="sp-link" onclick="show('attendance',this)"><i class="fas fa-calendar-check"></i> Attendance</button></li>
+      <li><button class="sp-link" onclick="show('marks',this)"><i class="fas fa-chart-bar"></i> Marks</button></li>
+      <li><button class="sp-link" onclick="show('performance',this)"><i class="fas fa-chart-line"></i> Performance</button></li>
     </ul>
   </aside>
+
+  <!-- MAIN -->
   <main class="sp-main" id="portalMain">
-    <div class="text-center py-5"><i class="fas fa-spinner fa-spin fa-2x text-success"></i><p class="mt-2 text-muted">Loading your dashboard...</p></div>
+    <div style="text-align:center;padding:60px;color:#64748b">
+      <i class="fas fa-spinner fa-spin fa-2x" style="color:#059669"></i>
+      <p style="margin-top:12px">Loading your dashboard...</p>
+    </div>
   </main>
-</div>
+
+</div><!-- /sp-wrap -->
+
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
 <script src="../js/api.js"></script>
 <script>
-let student, subjectMarks, avgMark, overallGrade, attendanceStatus;
+let S, SM, AVG, OG, AS;
 
-function grade(m){if(m>=90)return{l:'A+',c:'success'};if(m>=80)return{l:'A',c:'success'};if(m>=70)return{l:'B',c:'primary'};if(m>=60)return{l:'C',c:'warning'};if(m>=50)return{l:'D',c:'warning'};return{l:'F',c:'danger'};}
-function attSt(a){if(a>=85)return{l:'Excellent',c:'success'};if(a>=75)return{l:'Good',c:'primary'};if(a>=65)return{l:'Average',c:'warning'};return{l:'Low',c:'danger'};}
+function grade(m){
+  if(m>=90)return{l:'A+',c:'success',bc:'bc-success',gc:'gs'};
+  if(m>=80)return{l:'A', c:'success',bc:'bc-success',gc:'gs'};
+  if(m>=70)return{l:'B', c:'primary',bc:'bc-primary',gc:'gp'};
+  if(m>=60)return{l:'C', c:'warning',bc:'bc-warning',gc:'gw'};
+  if(m>=50)return{l:'D', c:'warning',bc:'bc-warning',gc:'gw'};
+  return          {l:'F', c:'danger', bc:'bc-danger', gc:'gd'};
+}
+function attSt(a){
+  if(a>=85)return{l:'Excellent',c:'success'};
+  if(a>=75)return{l:'Good',     c:'primary'};
+  if(a>=65)return{l:'Average',  c:'warning'};
+  return         {l:'Low',      c:'danger'};
+}
+function tc(c){return 'tc-'+c;}
+function bdg(c,t){return `<span class="badge badge-${c}">${t}</span>`;}
 
-function show(id, el) {
-  document.querySelectorAll('.sp-section').forEach(s=>s.classList.remove('active'));
-  document.querySelectorAll('.sp-nav-link').forEach(l=>l.classList.remove('active'));
+function show(id, el){
+  document.querySelectorAll('.sp-sec').forEach(s=>s.classList.remove('active'));
+  document.querySelectorAll('.sp-link').forEach(l=>l.classList.remove('active'));
   document.getElementById(id).classList.add('active');
   el.classList.add('active');
-  if (id === 'performance') renderCharts();
-  return false;
+  if(id==='performance') renderCharts();
 }
 
-let chartsRendered = false;
-function renderCharts() {
-  if (chartsRendered) return;
-  chartsRendered = true;
-  const subjects = subjectMarks.map(s=>s.subject);
-  const marks    = subjectMarks.map(s=>s.mark);
-  const colors   = ['#4f46e5','#06b6d4','#10b981','#f59e0b','#ef4444'];
-  new Chart(document.getElementById('barChart'),{type:'bar',data:{labels:subjects,datasets:[{label:'Marks',data:marks,backgroundColor:colors,borderRadius:8,borderSkipped:false}]},options:{responsive:true,plugins:{legend:{display:false}},scales:{y:{beginAtZero:true,max:100,grid:{color:'#f1f5f9'}},x:{grid:{display:false}}}}});
-  new Chart(document.getElementById('radarChart'),{type:'radar',data:{labels:subjects,datasets:[{label:'Your Marks',data:marks,backgroundColor:'rgba(79,70,229,0.15)',borderColor:'#4f46e5',pointBackgroundColor:'#4f46e5',pointRadius:5,borderWidth:2}]},options:{responsive:true,scales:{r:{beginAtZero:true,max:100,ticks:{stepSize:20},grid:{color:'#e2e8f0'}}},plugins:{legend:{display:false}}}});
-  const gc={};marks.forEach(m=>{const k=m>=90?'A+':m>=80?'A':m>=70?'B':m>=60?'C':m>=50?'D':'F';gc[k]=(gc[k]||0)+1;});
+let chartsOk=false;
+function renderCharts(){
+  if(chartsOk||!S) return; chartsOk=true;
+  const labels=SM.map(s=>s.subject), vals=SM.map(s=>s.mark);
+  const colors=['#4f46e5','#06b6d4','#10b981','#f59e0b','#ef4444'];
+  new Chart(document.getElementById('barChart'),{type:'bar',data:{labels,datasets:[{label:'Marks',data:vals,backgroundColor:colors,borderRadius:8,borderSkipped:false}]},options:{responsive:true,plugins:{legend:{display:false}},scales:{y:{beginAtZero:true,max:100,grid:{color:'#f1f5f9'}},x:{grid:{display:false}}}}});
+  new Chart(document.getElementById('radarChart'),{type:'radar',data:{labels,datasets:[{label:'Marks',data:vals,backgroundColor:'rgba(79,70,229,.15)',borderColor:'#4f46e5',pointBackgroundColor:'#4f46e5',pointRadius:5,borderWidth:2}]},options:{responsive:true,scales:{r:{beginAtZero:true,max:100,ticks:{stepSize:20},grid:{color:'#e2e8f0'}}},plugins:{legend:{display:false}}}});
+  const gc={};vals.forEach(m=>{const k=m>=90?'A+':m>=80?'A':m>=70?'B':m>=60?'C':m>=50?'D':'F';gc[k]=(gc[k]||0)+1;});
   const nz=Object.entries(gc).filter(([,v])=>v>0);
-  new Chart(document.getElementById('doughnutChart'),{type:'doughnut',data:{labels:nz.map(([k])=>'Grade '+k),datasets:[{data:nz.map(([,v])=>v),backgroundColor:['#10b981','#4f46e5','#06b6d4','#f59e0b','#f97316','#ef4444'],borderWidth:3,borderColor:'#fff'}]},options:{cutout:'60%',plugins:{legend:{position:'bottom',labels:{padding:16,usePointStyle:true}}}}});
+  new Chart(document.getElementById('donutChart'),{type:'doughnut',data:{labels:nz.map(([k])=>'Grade '+k),datasets:[{data:nz.map(([,v])=>v),backgroundColor:['#10b981','#4f46e5','#06b6d4','#f59e0b','#ef4444'],borderWidth:3,borderColor:'#fff'}]},options:{cutout:'60%',plugins:{legend:{position:'bottom',labels:{padding:16,usePointStyle:true}}}}});
 }
 
-async function init() {
-  try { await api.studentMe(); } catch { location.href = 'login.html'; return; }
-  try {
-    const { data: s } = await api.portalMe();
-    student = s;
-    subjectMarks = Object.entries(s.marks).map(([k,v])=>({subject:k.charAt(0).toUpperCase()+k.slice(1),key:k,mark:v,grade:grade(v)}));
-    avgMark = Math.round(subjectMarks.reduce((a,s)=>a+s.mark,0)/subjectMarks.length);
-    overallGrade = grade(avgMark);
-    attendanceStatus = attSt(s.attendance);
+function buildPortal(){
+  const s=S, sm=SM, avg=AVG, og=OG, as_=AS;
+  const attPct=Math.round(s.attendance*3.14);
+  const attColor=s.attendance>=75?'#10b981':'#ef4444';
+
+  document.getElementById('portalMain').innerHTML = `
+
+  <!-- OVERVIEW -->
+  <section id="overview" class="sp-sec active">
+    <div class="sp-banner">
+      <div>
+        <h2>Welcome back, ${s.name.split(' ')[0]}! 👋</h2>
+        <p>${s.department} &nbsp;·&nbsp; Semester ${s.semester} &nbsp;·&nbsp; ${s.usn}</p>
+      </div>
+      <div class="sp-banner-icon"><i class="fas fa-user-graduate"></i></div>
+    </div>
+
+    <div class="row g-3 mb-4">
+      <div class="col-6 col-lg-3">
+        <div class="sp-stat sp-stat-blue">
+          <div class="sp-stat-icon"><i class="fas fa-calendar-check"></i></div>
+          <div class="sp-stat-val">${s.attendance}%</div>
+          <div class="sp-stat-lbl">Attendance</div>
+          <div class="sp-stat-sub ${tc(as_.c)}">${as_.l}</div>
+        </div>
+      </div>
+      <div class="col-6 col-lg-3">
+        <div class="sp-stat sp-stat-green">
+          <div class="sp-stat-icon"><i class="fas fa-star"></i></div>
+          <div class="sp-stat-val">${avg}</div>
+          <div class="sp-stat-lbl">Avg Marks</div>
+          <div class="sp-stat-sub ${tc(og.c)}">Grade ${og.l}</div>
+        </div>
+      </div>
+      <div class="col-6 col-lg-3">
+        <div class="sp-stat sp-stat-purple">
+          <div class="sp-stat-icon"><i class="fas fa-book"></i></div>
+          <div class="sp-stat-val">${sm.length}</div>
+          <div class="sp-stat-lbl">Subjects</div>
+          <div class="sp-stat-sub tc-primary">This Semester</div>
+        </div>
+      </div>
+      <div class="col-6 col-lg-3">
+        <div class="sp-stat sp-stat-orange">
+          <div class="sp-stat-icon"><i class="fas fa-award"></i></div>
+          <div class="sp-stat-val">${og.l}</div>
+          <div class="sp-stat-lbl">Overall Grade</div>
+          <div class="sp-stat-sub ${tc(og.c)}">${avg}/100</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="row g-4">
+      <div class="col-12 col-md-5">
+        <div class="card h-100">
+          <div class="card-header"><h6 class="card-title"><i class="fas fa-calendar-check me-2" style="color:#059669"></i>Attendance Status</h6></div>
+          <div class="card-body d-flex flex-column align-items-center justify-content-center py-4">
+            <div class="att-circle mb-3">
+              <svg viewBox="0 0 120 120">
+                <circle cx="60" cy="60" r="50" fill="none" stroke="#f1f5f9" stroke-width="12"/>
+                <circle cx="60" cy="60" r="50" fill="none" stroke="${attColor}" stroke-width="12"
+                  stroke-dasharray="${attPct} 314" stroke-linecap="round" transform="rotate(-90 60 60)"/>
+              </svg>
+              <div class="att-text"><span class="att-pct">${s.attendance}%</span></div>
+            </div>
+            <span class="badge badge-${as_.c}" style="font-size:14px;padding:8px 20px">${as_.l}</span>
+            <p style="color:#64748b;font-size:13px;margin-top:10px;text-align:center">
+              ${s.attendance>=75
+                ? '<i class="fas fa-check-circle" style="color:#10b981"></i> You meet the 75% minimum requirement.'
+                : '<i class="fas fa-exclamation-triangle" style="color:#ef4444"></i> Below 75% minimum requirement.'}
+            </p>
+          </div>
+        </div>
+      </div>
+      <div class="col-12 col-md-7">
+        <div class="card h-100">
+          <div class="card-header d-flex justify-content-between align-items-center">
+            <h6 class="card-title"><i class="fas fa-chart-bar me-2" style="color:#4f46e5"></i>Subject Marks</h6>
+            <span class="badge badge-primary">Avg: ${avg}/100</span>
+          </div>
+          <div class="card-body">
+            ${sm.map(m=>`
+            <div style="margin-bottom:14px">
+              <div style="display:flex;justify-content:space-between;margin-bottom:5px">
+                <span style="font-weight:600;font-size:13px">${m.subject}</span>
+                <div style="display:flex;align-items:center;gap:8px">
+                  <span style="font-weight:700;font-size:13px">${m.mark}/100</span>
+                  <span class="gbadge ${m.grade.gc}">${m.grade.l}</span>
+                </div>
+              </div>
+              <div class="progress" style="height:8px">
+                <div class="progress-bar" style="width:${m.mark}%;background:${m.mark>=80?'#10b981':m.mark>=60?'#4f46e5':'#ef4444'}"></div>
+              </div>
+            </div>`).join('')}
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- PROFILE -->
+  <section id="profile" class="sp-sec">
+    <h5 class="sp-title"><i class="fas fa-user-circle me-2" style="color:#059669"></i>My Profile</h5>
+    <div class="row g-4">
+      <div class="col-12 col-md-4">
+        <div class="card text-center">
+          <div class="card-body" style="padding:32px 20px">
+            <div class="prof-avatar">${s.name.charAt(0)}</div>
+            <h5 style="margin-top:16px;margin-bottom:4px;font-weight:700">${s.name}</h5>
+            <p style="color:#64748b;margin-bottom:10px"><code>${s.usn}</code></p>
+            <span class="badge badge-primary">${s.department}</span>
+          </div>
+        </div>
+      </div>
+      <div class="col-12 col-md-8">
+        <div class="card h-100">
+          <div class="card-header"><h6 class="card-title">Personal Details</h6></div>
+          <div class="card-body">
+            <div class="det-row"><span class="det-lbl"><i class="fas fa-id-badge me-2 tc-primary"></i>Student ID</span><span class="det-val">${s.id}</span></div>
+            <div class="det-row"><span class="det-lbl"><i class="fas fa-user me-2 tc-primary"></i>Full Name</span><span class="det-val">${s.name}</span></div>
+            <div class="det-row"><span class="det-lbl"><i class="fas fa-id-card me-2 tc-primary"></i>USN</span><span class="det-val"><code>${s.usn}</code></span></div>
+            <div class="det-row"><span class="det-lbl"><i class="fas fa-envelope me-2 tc-primary"></i>Email</span><span class="det-val">${s.email}</span></div>
+            <div class="det-row"><span class="det-lbl"><i class="fas fa-building me-2 tc-primary"></i>Department</span><span class="det-val">${s.department}</span></div>
+            <div class="det-row"><span class="det-lbl"><i class="fas fa-book me-2 tc-primary"></i>Semester</span><span class="det-val">Semester ${s.semester}</span></div>
+            <div class="det-row"><span class="det-lbl"><i class="fas fa-calendar me-2 tc-primary"></i>Enrolled On</span><span class="det-val">${new Date(s.createdAt).toLocaleDateString('en-IN',{day:'2-digit',month:'long',year:'numeric'})}</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ATTENDANCE -->
+  <section id="attendance" class="sp-sec">
+    <h5 class="sp-title"><i class="fas fa-calendar-check me-2" style="color:#059669"></i>Attendance Details</h5>
+    <div class="row g-4">
+      <div class="col-12 col-md-5">
+        <div class="card">
+          <div class="card-body text-center" style="padding:40px 20px">
+            <div class="att-circle mb-4" style="width:180px;height:180px;margin:0 auto">
+              <svg viewBox="0 0 120 120" style="width:180px;height:180px">
+                <circle cx="60" cy="60" r="50" fill="none" stroke="#f1f5f9" stroke-width="10"/>
+                <circle cx="60" cy="60" r="50" fill="none" stroke="${attColor}" stroke-width="10"
+                  stroke-dasharray="${attPct} 314" stroke-linecap="round" transform="rotate(-90 60 60)"/>
+              </svg>
+              <div class="att-text"><span style="font-size:32px;font-weight:800;color:#1e293b">${s.attendance}%</span></div>
+            </div>
+            <h4 class="${tc(as_.c)}" style="font-weight:700">${as_.l}</h4>
+            <p style="color:#64748b;margin-top:6px">Current Attendance Percentage</p>
+          </div>
+        </div>
+      </div>
+      <div class="col-12 col-md-7">
+        <div class="card h-100">
+          <div class="card-header"><h6 class="card-title">Attendance Breakdown</h6></div>
+          <div class="card-body">
+            ${[{l:'Excellent',min:85,max:100,c:'success'},{l:'Good',min:75,max:84,c:'primary'},{l:'Average',min:65,max:74,c:'warning'},{l:'Low',min:0,max:64,c:'danger'}].map(b=>`
+            <div class="att-band ${s.attendance>=b.min&&s.attendance<=b.max?'active-b':''}">
+              <div style="display:flex;justify-content:space-between;align-items:center">
+                <div>
+                  <span class="badge badge-${b.c}" style="margin-right:8px">${b.l}</span>
+                  <span style="color:#64748b;font-size:12px">${b.min}% – ${b.max}%</span>
+                </div>
+                ${s.attendance>=b.min&&s.attendance<=b.max?`<span class="badge badge-${b.c}"><i class="fas fa-check-circle me-1"></i>Your Range</span>`:''}
+              </div>
+            </div>`).join('')}
+            <div style="margin-top:16px;padding:14px;background:#f8fafc;border-radius:10px">
+              ${s.attendance>=75
+                ? `<p style="margin:0;color:#059669"><i class="fas fa-check-circle me-2"></i>You meet the minimum 75% requirement. Keep it up!</p>`
+                : `<p style="margin:0;color:#ef4444"><i class="fas fa-exclamation-triangle me-2"></i>Below 75%. You need <strong>${75-s.attendance}%</strong> more to meet the minimum.</p>`}
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- MARKS -->
+  <section id="marks" class="sp-sec">
+    <h5 class="sp-title"><i class="fas fa-chart-bar me-2" style="color:#4f46e5"></i>Marks & Grades</h5>
+    <div class="row g-3 mb-4">
+      <div class="col-6 col-md-3"><div class="marks-sum"><div class="marks-big ${tc(og.c)}">${avg}</div><div class="marks-sub">Average Score</div></div></div>
+      <div class="col-6 col-md-3"><div class="marks-sum"><div class="marks-big ${tc(og.c)}">${og.l}</div><div class="marks-sub">Overall Grade</div></div></div>
+      <div class="col-6 col-md-3"><div class="marks-sum"><div class="marks-big tc-success">${sm.filter(s=>s.mark>=75).length}</div><div class="marks-sub">Subjects Passed</div></div></div>
+      <div class="col-6 col-md-3"><div class="marks-sum"><div class="marks-big tc-danger">${sm.filter(s=>s.mark<50).length}</div><div class="marks-sub">Subjects Failed</div></div></div>
+    </div>
+    <div class="row g-3 mb-4">
+      ${sm.map(m=>`
+      <div class="col-12 col-sm-6 col-lg-4">
+        <div class="subj-card ${m.grade.bc}">
+          <div style="display:flex;justify-content:space-between;align-items:start;margin-bottom:12px">
+            <h6 style="margin:0;font-weight:700">${m.subject}</h6>
+            <span class="gbadge ${m.grade.gc}">${m.grade.l}</span>
+          </div>
+          <div class="subj-score ${tc(m.grade.c)}">${m.mark}<span class="subj-total">/100</span></div>
+          <div class="progress mt-2" style="height:8px">
+            <div class="progress-bar" style="width:${m.mark}%;background:${m.mark>=80?'#10b981':m.mark>=60?'#4f46e5':'#ef4444'}"></div>
+          </div>
+        </div>
+      </div>`).join('')}
+    </div>
+    <div class="card">
+      <div class="card-header"><h6 class="card-title">Detailed Marks Sheet</h6></div>
+      <div style="overflow-x:auto">
+        <table class="table">
+          <thead class="table-light"><tr><th>Subject</th><th>Marks</th><th>Out of</th><th>%</th><th>Grade</th><th>Status</th></tr></thead>
+          <tbody>
+            ${sm.map(m=>`<tr>
+              <td style="font-weight:600">${m.subject}</td>
+              <td style="font-weight:700" class="${tc(m.grade.c)}">${m.mark}</td>
+              <td style="color:#64748b">100</td>
+              <td>${m.mark}%</td>
+              <td><span class="gbadge ${m.grade.gc}">${m.grade.l}</span></td>
+              <td>${m.mark>=50?'<span class="badge badge-success"><i class="fas fa-check me-1"></i>Pass</span>':'<span class="badge badge-danger"><i class="fas fa-times me-1"></i>Fail</span>'}</td>
+            </tr>`).join('')}
+            <tr style="background:#f8fafc;font-weight:700">
+              <td>Total / Average</td>
+              <td class="tc-primary">${sm.reduce((a,s)=>a+s.mark,0)} / ${avg}</td>
+              <td style="color:#64748b">${sm.length*100}</td>
+              <td>${avg}%</td>
+              <td><span class="gbadge ${og.gc}">${og.l}</span></td>
+              <td></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </section>
+
+  <!-- PERFORMANCE -->
+  <section id="performance" class="sp-sec">
+    <h5 class="sp-title"><i class="fas fa-chart-line me-2" style="color:#4f46e5"></i>Performance Analytics</h5>
+    <div class="row g-4">
+      <div class="col-12 col-lg-6">
+        <div class="card"><div class="card-header"><h6 class="card-title">Subject Marks (Bar)</h6></div>
+        <div class="card-body"><canvas id="barChart" height="260"></canvas></div></div>
+      </div>
+      <div class="col-12 col-lg-6">
+        <div class="card"><div class="card-header"><h6 class="card-title">Performance Radar</h6></div>
+        <div class="card-body"><canvas id="radarChart" height="260"></canvas></div></div>
+      </div>
+      <div class="col-12">
+        <div class="card"><div class="card-header"><h6 class="card-title">Grade Distribution</h6></div>
+        <div class="card-body d-flex justify-content-center">
+          <div style="max-width:400px;width:100%"><canvas id="donutChart" height="220"></canvas></div>
+        </div></div>
+      </div>
+    </div>
+  </section>`;
+}
+
+async function init(){
+  try{ await api.studentMe(); } catch{ location.href='login.html'; return; }
+  try{
+    const {data:s} = await api.portalMe();
+    S = s;
+    SM = Object.entries(s.marks).map(([k,v])=>({subject:k.charAt(0).toUpperCase()+k.slice(1),mark:v,grade:grade(v)}));
+    AVG = Math.round(SM.reduce((a,s)=>a+s.mark,0)/SM.length);
+    OG  = grade(AVG);
+    AS  = attSt(s.attendance);
 
     document.getElementById('spAvatar').textContent = s.name.charAt(0);
     document.getElementById('spName').textContent   = s.name;
     document.getElementById('spUsn').textContent    = s.usn;
 
-    document.getElementById('portalMain').innerHTML = buildPortal();
-  } catch(e) { console.error(e); location.href = 'login.html'; }
+    buildPortal();
+  } catch(e){ console.error(e); location.href='login.html'; }
 }
 
-function buildPortal() {
-  const s = student, sm = subjectMarks, avg = avgMark, og = overallGrade, as_ = attendanceStatus;
-  return `
-  <section id="overview" class="sp-section active">
-    <div class="sp-welcome-banner">
-      <div class="sp-welcome-text"><h2>Welcome back, ${s.name.split(' ')[0]}! 👋</h2><p>${s.department} &nbsp;·&nbsp; Semester ${s.semester} &nbsp;·&nbsp; ${s.usn}</p></div>
-      <div class="sp-welcome-icon d-none d-md-flex"><i class="fas fa-user-graduate"></i></div>
-    </div>
-    <div class="row g-3 mb-4">
-      <div class="col-6 col-lg-3"><div class="sp-stat-card sp-stat-blue"><div class="sp-stat-icon"><i class="fas fa-calendar-check"></i></div><div class="sp-stat-val">${s.attendance}%</div><div class="sp-stat-lbl">Attendance</div><div class="sp-stat-status text-${as_.c}">${as_.l}</div></div></div>
-      <div class="col-6 col-lg-3"><div class="sp-stat-card sp-stat-green"><div class="sp-stat-icon"><i class="fas fa-star"></i></div><div class="sp-stat-val">${avg}</div><div class="sp-stat-lbl">Avg Marks</div><div class="sp-stat-status text-${og.c}">Grade ${og.l}</div></div></div>
-      <div class="col-6 col-lg-3"><div class="sp-stat-card sp-stat-purple"><div class="sp-stat-icon"><i class="fas fa-book"></i></div><div class="sp-stat-val">${sm.length}</div><div class="sp-stat-lbl">Subjects</div><div class="sp-stat-status text-primary">This Semester</div></div></div>
-      <div class="col-6 col-lg-3"><div class="sp-stat-card sp-stat-orange"><div class="sp-stat-icon"><i class="fas fa-award"></i></div><div class="sp-stat-val">${og.l}</div><div class="sp-stat-lbl">Overall Grade</div><div class="sp-stat-status text-${og.c}">${avg}/100</div></div></div>
-    </div>
-    <div class="row g-4">
-      <div class="col-12 col-md-5">
-        <div class="card h-100"><div class="card-header"><h6 class="card-title mb-0"><i class="fas fa-calendar-check me-2"></i>Attendance</h6></div>
-        <div class="card-body d-flex flex-column align-items-center justify-content-center py-4">
-          <div class="attendance-circle mb-3"><svg viewBox="0 0 120 120" class="attendance-svg"><circle cx="60" cy="60" r="50" fill="none" stroke="#f1f5f9" stroke-width="12"/><circle cx="60" cy="60" r="50" fill="none" stroke="${s.attendance>=75?'#10b981':'#ef4444'}" stroke-width="12" stroke-dasharray="${Math.round(s.attendance*3.14)} 314" stroke-linecap="round" transform="rotate(-90 60 60)"/></svg><div class="attendance-text"><span class="att-percent">${s.attendance}%</span></div></div>
-          <span class="badge bg-${as_.c} fs-6 px-3 py-2">${as_.l}</span>
-          <p class="text-muted small mt-2 text-center">${s.attendance>=75?'<i class="fas fa-check-circle text-success me-1"></i>You meet the 75% minimum.':'<i class="fas fa-exclamation-triangle text-danger me-1"></i>Below 75% minimum.'}</p>
-        </div></div>
-      </div>
-      <div class="col-12 col-md-7">
-        <div class="card h-100"><div class="card-header d-flex justify-content-between align-items-center"><h6 class="card-title mb-0"><i class="fas fa-chart-bar me-2"></i>Subject Marks</h6><span class="badge bg-primary">Avg: ${avg}/100</span></div>
-        <div class="card-body">${sm.map(m=>`<div class="mb-3"><div class="d-flex justify-content-between mb-1"><span class="fw-semibold small">${m.subject}</span><div class="d-flex align-items-center gap-2"><span class="fw-bold small">${m.mark}/100</span><span class="badge bg-${m.grade.c}" style="min-width:32px">${m.grade.l}</span></div></div><div class="progress" style="height:8px"><div class="progress-bar bg-${m.grade.c}" style="width:${m.mark}%"></div></div></div>`).join('')}</div></div>
-      </div>
-    </div>
-  </section>
-
-  <section id="profile" class="sp-section">
-    <h5 class="sp-section-title"><i class="fas fa-user-circle me-2"></i>My Profile</h5>
-    <div class="row g-4">
-      <div class="col-12 col-md-4"><div class="card text-center"><div class="card-body py-4"><div class="sp-profile-avatar">${s.name.charAt(0)}</div><h5 class="mt-3 mb-1">${s.name}</h5><p class="text-muted mb-2"><code>${s.usn}</code></p><span class="badge bg-primary-soft text-primary">${s.department}</span></div></div></div>
-      <div class="col-12 col-md-8"><div class="card h-100"><div class="card-header"><h6 class="card-title mb-0">Personal Details</h6></div><div class="card-body"><div class="sp-detail-grid">
-        <div class="sp-detail-item"><span class="sp-detail-label"><i class="fas fa-id-badge me-2 text-primary"></i>Student ID</span><span class="sp-detail-value">${s.id}</span></div>
-        <div class="sp-detail-item"><span class="sp-detail-label"><i class="fas fa-user me-2 text-primary"></i>Full Name</span><span class="sp-detail-value">${s.name}</span></div>
-        <div class="sp-detail-item"><span class="sp-detail-label"><i class="fas fa-id-card me-2 text-primary"></i>USN</span><span class="sp-detail-value"><code>${s.usn}</code></span></div>
-        <div class="sp-detail-item"><span class="sp-detail-label"><i class="fas fa-envelope me-2 text-primary"></i>Email</span><span class="sp-detail-value">${s.email}</span></div>
-        <div class="sp-detail-item"><span class="sp-detail-label"><i class="fas fa-building me-2 text-primary"></i>Department</span><span class="sp-detail-value">${s.department}</span></div>
-        <div class="sp-detail-item"><span class="sp-detail-label"><i class="fas fa-book me-2 text-primary"></i>Semester</span><span class="sp-detail-value">Semester ${s.semester}</span></div>
-        <div class="sp-detail-item"><span class="sp-detail-label"><i class="fas fa-calendar me-2 text-primary"></i>Enrolled On</span><span class="sp-detail-value">${new Date(s.createdAt).toLocaleDateString('en-IN',{day:'2-digit',month:'long',year:'numeric'})}</span></div>
-      </div></div></div></div>
-    </div>
-  </section>
-
-  <section id="attendance" class="sp-section">
-    <h5 class="sp-section-title"><i class="fas fa-calendar-check me-2"></i>Attendance Details</h5>
-    <div class="row g-4">
-      <div class="col-12 col-md-5"><div class="card"><div class="card-body text-center py-5">
-        <div class="attendance-circle mx-auto mb-4" style="width:160px;height:160px"><svg viewBox="0 0 120 120" style="width:160px;height:160px"><circle cx="60" cy="60" r="50" fill="none" stroke="#f1f5f9" stroke-width="10"/><circle cx="60" cy="60" r="50" fill="none" stroke="${s.attendance>=75?'#10b981':'#ef4444'}" stroke-width="10" stroke-dasharray="${Math.round(s.attendance*3.14)} 314" stroke-linecap="round" transform="rotate(-90 60 60)"/></svg><div class="attendance-text"><span style="font-size:28px;font-weight:700">${s.attendance}%</span></div></div>
-        <h4 class="text-${as_.c}">${as_.l}</h4><p class="text-muted">Current Attendance</p>
-      </div></div></div>
-      <div class="col-12 col-md-7"><div class="card h-100"><div class="card-header"><h6 class="card-title mb-0">Attendance Breakdown</h6></div><div class="card-body">
-        ${[{l:'Excellent',min:85,max:100,c:'success'},{l:'Good',min:75,max:84,c:'primary'},{l:'Average',min:65,max:74,c:'warning'},{l:'Low',min:0,max:64,c:'danger'}].map(b=>`
-        <div class="sp-att-band ${s.attendance>=b.min&&s.attendance<=b.max?'active-band border-'+b.c:''}">
-          <div class="d-flex justify-content-between align-items-center">
-            <div><span class="badge bg-${b.c} me-2">${b.l}</span><span class="text-muted small">${b.min}% – ${b.max}%</span></div>
-            ${s.attendance>=b.min&&s.attendance<=b.max?`<span class="badge bg-${b.c}-soft text-${b.c}"><i class="fas fa-check-circle me-1"></i>Your Range</span>`:''}
-          </div>
-        </div>`).join('')}
-        <div class="mt-4 p-3 rounded" style="background:var(--bg,#f8fafc)">
-          ${s.attendance>=75?`<p class="mb-0 text-success"><i class="fas fa-check-circle me-2"></i>You meet the minimum 75% requirement. Keep it up!</p>`:`<p class="mb-0 text-danger"><i class="fas fa-exclamation-triangle me-2"></i>Below 75%. You need <strong>${75-s.attendance}%</strong> more to meet the minimum.</p>`}
-        </div>
-      </div></div></div>
-    </div>
-  </section>
-
-  <section id="marks" class="sp-section">
-    <h5 class="sp-section-title"><i class="fas fa-chart-bar me-2"></i>Marks & Grades</h5>
-    <div class="row g-3 mb-4">
-      <div class="col-6 col-md-3"><div class="sp-marks-summary-card"><div class="sp-marks-big text-${og.c}">${avg}</div><div class="sp-marks-sub">Average Score</div></div></div>
-      <div class="col-6 col-md-3"><div class="sp-marks-summary-card"><div class="sp-marks-big text-${og.c}">${og.l}</div><div class="sp-marks-sub">Overall Grade</div></div></div>
-      <div class="col-6 col-md-3"><div class="sp-marks-summary-card"><div class="sp-marks-big text-success">${sm.filter(s=>s.mark>=75).length}</div><div class="sp-marks-sub">Subjects Passed</div></div></div>
-      <div class="col-6 col-md-3"><div class="sp-marks-summary-card"><div class="sp-marks-big text-danger">${sm.filter(s=>s.mark<50).length}</div><div class="sp-marks-sub">Subjects Failed</div></div></div>
-    </div>
-    <div class="row g-3 mb-4">${sm.map(m=>`
-      <div class="col-12 col-sm-6 col-lg-4"><div class="sp-subject-card border-${m.grade.c}">
-        <div class="d-flex justify-content-between align-items-start mb-3"><h6 class="mb-0 fw-bold">${m.subject}</h6><span class="sp-grade-badge bg-${m.grade.c}">${m.grade.l}</span></div>
-        <div class="sp-marks-score text-${m.grade.c}">${m.mark}<span class="sp-marks-total">/100</span></div>
-        <div class="progress mt-2" style="height:8px"><div class="progress-bar bg-${m.grade.c}" style="width:${m.mark}%"></div></div>
-      </div></div>`).join('')}</div>
-    <div class="card"><div class="card-header"><h6 class="card-title mb-0">Detailed Marks Sheet</h6></div><div class="card-body p-0">
-      <table class="table table-hover mb-0"><thead class="table-light"><tr><th>Subject</th><th>Marks</th><th>Out of</th><th>%</th><th>Grade</th><th>Status</th></tr></thead>
-      <tbody>${sm.map(m=>`<tr><td class="fw-semibold">${m.subject}</td><td class="fw-bold text-${m.grade.c}">${m.mark}</td><td class="text-muted">100</td><td>${m.mark}%</td><td><span class="badge bg-${m.grade.c}">${m.grade.l}</span></td><td>${m.mark>=50?'<span class="badge bg-success-soft text-success"><i class="fas fa-check me-1"></i>Pass</span>':'<span class="badge bg-danger-soft text-danger"><i class="fas fa-times me-1"></i>Fail</span>'}</td></tr>`).join('')}
-      <tr class="table-light"><td class="fw-bold">Total / Average</td><td class="fw-bold text-primary">${sm.reduce((a,s)=>a+s.mark,0)} / ${avg}</td><td class="text-muted">${sm.length*100}</td><td class="fw-bold">${avg}%</td><td><span class="badge bg-${og.c}">${og.l}</span></td><td></td></tr>
-      </tbody></table>
-    </div></div>
-  </section>
-
-  <section id="performance" class="sp-section">
-    <h5 class="sp-section-title"><i class="fas fa-chart-line me-2"></i>Performance Analytics</h5>
-    <div class="row g-4">
-      <div class="col-12 col-lg-6"><div class="card"><div class="card-header"><h6 class="card-title mb-0">Subject Marks (Bar)</h6></div><div class="card-body"><canvas id="barChart" height="260"></canvas></div></div></div>
-      <div class="col-12 col-lg-6"><div class="card"><div class="card-header"><h6 class="card-title mb-0">Performance Radar</h6></div><div class="card-body"><canvas id="radarChart" height="260"></canvas></div></div></div>
-      <div class="col-12"><div class="card"><div class="card-header"><h6 class="card-title mb-0">Grade Distribution</h6></div><div class="card-body d-flex justify-content-center"><div style="max-width:400px;width:100%"><canvas id="doughnutChart" height="220"></canvas></div></div></div></div>
-    </div>
-  </section>`;
-}
-
-document.getElementById('logoutBtn').addEventListener('click', async (e) => {
-  e.preventDefault(); await api.studentLogout(); location.href = 'login.html';
+document.getElementById('logoutBtn').addEventListener('click', async e=>{
+  e.preventDefault(); await api.studentLogout(); location.href='login.html';
 });
 
 init();

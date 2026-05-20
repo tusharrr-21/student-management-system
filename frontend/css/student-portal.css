@@ -1,0 +1,268 @@
+/* ============================================================
+   Student Portal — Dedicated Stylesheet
+   ============================================================ */
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+body.sp-body {
+  font-family: 'Inter', sans-serif;
+  background: #f0fdf4;
+  min-height: 100vh;
+}
+
+/* ── Navbar ─────────────────────────────────────────────── */
+.sp-navbar {
+  height: 64px;
+  background: linear-gradient(135deg, #065f46, #059669);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 24px;
+  position: fixed;
+  top: 0; left: 0; right: 0;
+  z-index: 1100;
+  box-shadow: 0 2px 12px rgba(5,150,105,.3);
+}
+
+.sp-navbar-brand {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  color: #fff;
+  font-size: 18px;
+  font-weight: 700;
+}
+.sp-navbar-brand i { font-size: 22px; color: #6ee7b7; }
+
+.sp-portal-badge {
+  background: rgba(255,255,255,.2);
+  color: #fff;
+  font-size: 11px;
+  font-weight: 600;
+  padding: 3px 10px;
+  border-radius: 20px;
+}
+
+.sp-navbar-right { display: flex; align-items: center; gap: 16px; }
+.sp-user { display: flex; align-items: center; gap: 10px; }
+
+.sp-avatar {
+  width: 38px; height: 38px;
+  border-radius: 50%;
+  background: rgba(255,255,255,.25);
+  border: 2px solid rgba(255,255,255,.4);
+  color: #fff;
+  font-weight: 700; font-size: 16px;
+  display: flex; align-items: center; justify-content: center;
+}
+
+.sp-user-info { display: flex; flex-direction: column; }
+.sp-user-name { color: #fff; font-weight: 600; font-size: 13px; line-height: 1.2; }
+.sp-user-usn  { color: rgba(255,255,255,.7); font-size: 11px; }
+
+.sp-logout-btn {
+  background: rgba(255,255,255,.15);
+  color: #fff;
+  border: 1px solid rgba(255,255,255,.3);
+  padding: 7px 14px;
+  border-radius: 8px;
+  font-size: 13px;
+  font-weight: 500;
+  text-decoration: none;
+  transition: all .2s;
+}
+.sp-logout-btn:hover { background: rgba(255,255,255,.25); color: #fff; }
+
+/* ── Layout ─────────────────────────────────────────────── */
+.sp-wrapper {
+  display: flex;
+  min-height: 100vh;
+  padding-top: 64px;
+}
+
+/* ── Sidebar ─────────────────────────────────────────────── */
+.sp-sidebar {
+  width: 220px;
+  background: #fff;
+  border-right: 1px solid #d1fae5;
+  padding: 20px 12px;
+  flex-shrink: 0;
+  position: fixed;
+  top: 64px;
+  left: 0;
+  height: calc(100vh - 64px);
+  overflow-y: auto;
+  z-index: 100;
+}
+
+.sp-nav { list-style: none; padding: 0; margin: 0; }
+.sp-nav li { margin-bottom: 4px; }
+
+.sp-nav-link {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 14px;
+  color: #374151;
+  text-decoration: none;
+  border-radius: 10px;
+  font-size: 13.5px;
+  font-weight: 500;
+  transition: all .2s;
+  cursor: pointer;
+}
+.sp-nav-link i { width: 18px; text-align: center; color: #6b7280; }
+.sp-nav-link:hover { background: #f0fdf4; color: #059669; }
+.sp-nav-link:hover i { color: #059669; }
+.sp-nav-link.active {
+  background: linear-gradient(135deg, #d1fae5, #a7f3d0);
+  color: #065f46;
+  font-weight: 600;
+}
+.sp-nav-link.active i { color: #059669; }
+
+/* ── Main ────────────────────────────────────────────────── */
+.sp-main {
+  flex: 1;
+  margin-left: 220px;
+  padding: 28px;
+  min-height: calc(100vh - 64px);
+}
+
+/* ── Sections ────────────────────────────────────────────── */
+.sp-section { display: none; }
+.sp-section.active { display: block; }
+
+.sp-section-title {
+  font-size: 18px;
+  font-weight: 700;
+  color: #1e293b;
+  margin-bottom: 20px;
+  padding-bottom: 10px;
+  border-bottom: 2px solid #d1fae5;
+}
+
+/* ── Welcome Banner ──────────────────────────────────────── */
+.sp-welcome-banner {
+  background: linear-gradient(135deg, #065f46, #059669);
+  border-radius: 16px;
+  padding: 28px 32px;
+  color: #fff;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 24px;
+  box-shadow: 0 8px 24px rgba(5,150,105,.25);
+}
+.sp-welcome-text h2 { font-size: 22px; font-weight: 700; margin-bottom: 6px; }
+.sp-welcome-text p  { opacity: .85; margin: 0; font-size: 14px; }
+.sp-welcome-icon { font-size: 64px; opacity: .25; }
+
+/* ── Stat Cards ──────────────────────────────────────────── */
+.sp-stat-card {
+  border-radius: 14px;
+  padding: 18px 16px;
+  text-align: center;
+  box-shadow: 0 4px 12px rgba(0,0,0,.08);
+  transition: transform .2s;
+}
+.sp-stat-card:hover { transform: translateY(-3px); }
+.sp-stat-blue   { background: linear-gradient(135deg,#eff6ff,#dbeafe); border: 1px solid #bfdbfe; }
+.sp-stat-green  { background: linear-gradient(135deg,#f0fdf4,#dcfce7); border: 1px solid #bbf7d0; }
+.sp-stat-purple { background: linear-gradient(135deg,#faf5ff,#ede9fe); border: 1px solid #ddd6fe; }
+.sp-stat-orange { background: linear-gradient(135deg,#fff7ed,#ffedd5); border: 1px solid #fed7aa; }
+.sp-stat-icon   { font-size: 22px; margin-bottom: 8px; color: #059669; }
+.sp-stat-val    { font-size: 26px; font-weight: 800; color: #1e293b; line-height: 1; }
+.sp-stat-lbl    { font-size: 12px; color: #64748b; margin: 4px 0 2px; }
+.sp-stat-status { font-size: 11px; font-weight: 600; }
+
+/* ── Profile ─────────────────────────────────────────────── */
+.sp-profile-avatar {
+  width: 90px; height: 90px;
+  border-radius: 50%;
+  background: linear-gradient(135deg,#059669,#10b981);
+  color: #fff;
+  font-size: 36px; font-weight: 700;
+  display: flex; align-items: center; justify-content: center;
+  margin: 0 auto;
+  box-shadow: 0 8px 20px rgba(5,150,105,.3);
+}
+
+.sp-detail-grid { display: flex; flex-direction: column; }
+.sp-detail-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 12px 0;
+  border-bottom: 1px solid #f1f5f9;
+  font-size: 13.5px;
+}
+.sp-detail-item:last-child { border-bottom: none; }
+.sp-detail-label { color: #64748b; }
+.sp-detail-value { font-weight: 600; color: #1e293b; text-align: right; }
+
+/* ── Attendance Bands ────────────────────────────────────── */
+.sp-att-band {
+  padding: 14px 16px;
+  border-radius: 10px;
+  border: 2px solid transparent;
+  background: #f8fafc;
+  margin-bottom: 10px;
+}
+.active-band { background: #fff; box-shadow: 0 2px 8px rgba(0,0,0,.08); }
+
+/* ── Marks Summary ───────────────────────────────────────── */
+.sp-marks-summary-card {
+  background: #fff;
+  border: 1px solid #e2e8f0;
+  border-radius: 12px;
+  padding: 20px;
+  text-align: center;
+  box-shadow: 0 1px 4px rgba(0,0,0,.06);
+}
+.sp-marks-big { font-size: 36px; font-weight: 800; line-height: 1; }
+.sp-marks-sub { font-size: 12px; color: #64748b; margin-top: 6px; }
+
+/* ── Subject Cards ───────────────────────────────────────── */
+.sp-subject-card {
+  background: #fff;
+  border: 2px solid #e2e8f0;
+  border-radius: 14px;
+  padding: 18px;
+  transition: all .2s;
+  box-shadow: 0 1px 4px rgba(0,0,0,.06);
+}
+.sp-subject-card:hover { box-shadow: 0 6px 16px rgba(0,0,0,.1); transform: translateY(-2px); }
+.sp-subject-card.border-success { border-color: #10b981; }
+.sp-subject-card.border-primary { border-color: #4f46e5; }
+.sp-subject-card.border-warning { border-color: #f59e0b; }
+.sp-subject-card.border-danger  { border-color: #ef4444; }
+
+.sp-grade-badge {
+  color: #fff; padding: 4px 10px;
+  border-radius: 20px; font-size: 12px; font-weight: 700;
+}
+.sp-grade-badge.bg-success { background: #10b981; }
+.sp-grade-badge.bg-primary { background: #4f46e5; }
+.sp-grade-badge.bg-warning { background: #f59e0b; }
+.sp-grade-badge.bg-danger  { background: #ef4444; }
+
+.sp-marks-score { font-size: 40px; font-weight: 800; line-height: 1; margin: 8px 0; }
+.sp-marks-total { font-size: 16px; font-weight: 400; color: #94a3b8; }
+
+/* ── Attendance Circle ───────────────────────────────────── */
+.attendance-circle { position: relative; }
+.attendance-text {
+  position: absolute; top: 50%; left: 50%;
+  transform: translate(-50%,-50%); text-align: center;
+}
+.att-percent { font-size: 22px; font-weight: 700; color: #1e293b; }
+
+/* ── Responsive ──────────────────────────────────────────── */
+@media (max-width: 767.98px) {
+  .sp-sidebar { display: none; }
+  .sp-main { margin-left: 0; padding: 16px; }
+  .sp-welcome-banner { padding: 20px; }
+  .sp-welcome-text h2 { font-size: 18px; }
+  .sp-welcome-icon { display: none; }
+}

@@ -1,18 +1,26 @@
 const express = require('express');
-const path    = require('path');
-const app     = express();
-const PORT    = 3000;
+const path = require('path');
 
-app.use(express.static(path.join(__dirname)));
+const app = express();
+const PORT = process.env.PORT || 3000;
 
-// Default routes
-app.get('/',         (req, res) => res.redirect('/admin/login.html'));
-app.get('/admin',    (req, res) => res.redirect('/admin/login.html'));
-app.get('/student',  (req, res) => res.redirect('/student/login.html'));
+// Kubernetes internal DNS name for backend service
+const BACKEND_URL = process.env.BACKEND_URL || 'http://sms-backend-service:5000';
 
-app.listen(PORT, () => {
-  console.log('\n🎓 Smart Student Management System — FRONTEND');
-  console.log(`🌐 Frontend running at http://localhost:${PORT}`);
-  console.log(`📋 Admin:   http://localhost:${PORT}/admin/login.html`);
-  console.log(`🎓 Student: http://localhost:${PORT}/student/login.html\n`);
+app.use(express.static(path.join(__dirname, 'public')));
+
+// Proxy: browser calls frontend, frontend calls backend inside cluster/network
+app.get('/students', async (req, res) => {
+  try {
+    const response = await fetch(`${BACKEND_URL}/students`);
+    const data = await response.json();
+    res.json(data);
+  } catch (err) {
+    res.status(502).json({ error: 'Failed to reach backend', details: err.message });
+  }
+});
+
+app.listen(PORT, '0.0.0.0', () => {
+  console.log(`Frontend running on port ${PORT}`);
+  console.log(`Backend URL: ${BACKEND_URL}`);
 });
